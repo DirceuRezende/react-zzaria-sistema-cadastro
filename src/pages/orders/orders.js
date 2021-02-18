@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react';
 import {
   Paper,
   Table,
@@ -7,12 +7,45 @@ import {
   TableContainer as MaterialTableContainer,
   TableHead,
   TableRow,
-  Typography
-} from '@material-ui/core'
-import styled from 'styled-components'
+  Typography,
+} from '@material-ui/core';
+import styled from 'styled-components';
+
+import singularOrPlural from 'utils/singular-or-plural';
+
+import { useOrders } from 'hooks';
 
 const Order = () => {
-  return allOrdersStatus.map(orderStatus => (
+  const { orders, status } = useOrders();
+
+  const allOrdersStatus = useMemo(() => ([
+    {
+      title: 'Pedidos pendentes',
+      type: status.pending
+    },
+    {
+      title: 'Pedidos em produção',
+      type: status.inProgress
+    },
+    {
+      title: 'Saiu para entrega',
+      type: status.outForDelivery
+    },
+    {
+      title: 'Pedidos finalizados',
+      type: status.delivered
+    },
+  ]), [status]);
+
+  function getHours(date) {
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+    return Intl.DateTimeFormat('pt-BR', options).format(date);
+  }
+
+  return allOrdersStatus.map((orderStatus) => (
     <TableContainer component={Paper} key={orderStatus.title}>
       <TableTitle>
         {orderStatus.title}
@@ -28,98 +61,141 @@ const Order = () => {
           </TableRow>
         </THead>
         <TableBody>
-          <TableRow>
-            <TableCell>
-              <div>
-                <Subtitle>
-                  Horário do pedido: 10:20h
-                </Subtitle>
-              </div>
-
-              <div>
-                <Subtitle>
-                  Pedido
-                </Subtitle>
-
-                <ul>
-                  <li>
-                    <Typography>
-                      1 pizza MÉDIA de {' '}
-                      Frango com Catupiry e Calabresa
-                    </Typography>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <Typography variant='button'>
-                  Endereço de entrega:
-                </Typography>
-
+          {orders?.[orderStatus.type].length === 0 && (
+            <TableRow>
+              <TableCell>
                 <Typography>
-                  Rua Tal, n° 92, {' '}
-                  ap 10<br />
-                  Bairro: São Januário - CEP: 81828-233<br />
-                  São Paulo / SP
+                  Nenhum pedido com esse status.
                 </Typography>
-              </div>
-            </TableCell>
-          </TableRow>
+              </TableCell>
+            </TableRow>
+          )}
+          {orders?.[orderStatus.type].map((order) => {
+            const {
+              address,
+              number,
+              complement,
+              district,
+              code: cep,
+              city,
+              state,
+            } = order.address;
+
+            return (
+              <TableRow key={order.id}>
+                <TableCell>
+                  <div>
+                    <Subtitle>
+                      Horário do pedido:
+                      {' '}
+                      {getHours(order.createdAt.toDate())}
+                    </Subtitle>
+                  </div>
+
+                  <div>
+                    <Subtitle>
+                      Pedido
+                    </Subtitle>
+
+                    <ul>
+                      {order.pizzas.map((pizza, index) => (
+                        <li key={index}>
+                        <Typography>
+                            {pizza.quantity} {' '}
+                            {singularOrPlural(
+                              pizza.quantity,
+                              'pizza',
+                              'pizzas'
+                            )}{' '}
+                            {pizza.size.name.toUpperCase()} de {' '}
+                            {pizza.flavours
+                              .map(flavour => flavour.name)
+                              .reduce((acc, flavour, index, array) => {
+                                if (index === 0) {
+                                  return flavour
+                                }
+
+                                if (index === array.length - 1) {
+                                  return `${acc} e ${flavour}`
+                                }
+
+                                return `${acc}, ${flavour}`
+                              }, '')}
+                          </Typography>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <Typography>
+                      {address}
+                      ,
+                      {' '}
+                      {number && `nº ${number}`}
+                      {' '}
+                      {' '}
+                      {complement && `, ${complement}`}
+                      <br />
+                      Bairro:
+                      {' '}
+                      {district}
+                      {' '}
+                      - CEP:
+                      {' '}
+                      {cep}
+                      <br />
+                      {city}
+                      {' '}
+                      /
+                      {' '}
+                      {state}
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
-  ))
-}
-
-const allOrdersStatus = [
-  {
-    title: 'Pedidos pendentes'
-  },
-  {
-    title: 'Pedidos em produção'
-  },
-  {
-    title: 'Saiu para entrega'
-  },
-  {
-    title: 'Pedidos finalizados'
-  }
-]
+  ));
+};
 
 const TableContainer = styled(MaterialTableContainer).attrs({
-  component: Paper
+  component: Paper,
 })`
   && {
     margin-bottom: ${({ theme }) => theme.spacing(3)}px;
   }
-`
+`;
 
 const TableTitle = styled(Typography).attrs({
-  variant: 'h6'
+  variant: 'h6',
 })`
   && {
     padding: ${({ theme }) => theme.spacing(3)}px;
   }
-`
+`;
 
 const Subtitle = styled(Typography).attrs({
-  variant: 'button'
+  variant: 'button',
 })`
   && {
     font-weight: bold;
   }
-`
+`;
 
 const THead = styled(TableHead)`
   && {
     background: ${({ theme }) => theme.palette.common.black};
   }
-`
+`;
 
 const Th = styled(TableCell)`
   && {
     color: ${({ theme }) => theme.palette.common.white};
   }
-`
+`;
 
-export default Order
+export default Order;

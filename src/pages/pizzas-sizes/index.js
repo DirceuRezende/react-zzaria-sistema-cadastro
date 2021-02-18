@@ -1,1 +1,1 @@
-export { default } from './pizzas-sizes'
+export { default } from './pizzas-sizes';

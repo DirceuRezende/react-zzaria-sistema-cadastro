@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-const PizzasSizes = () => {
-  return (
-    <h1>Tamanhos de Pizzas</h1>
-  )
-}
+const PizzasSizes = () => (
+  <h1>Tamanhos de Pizzas</h1>
+);
 
-export default PizzasSizes
+export default PizzasSizes;

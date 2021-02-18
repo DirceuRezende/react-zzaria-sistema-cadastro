@@ -3,31 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "rescripts start",
-    "build": "rescripts build",
-    "test": "rescripts test",
-    "lint-fix": "standard --fix | snazzy"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "standard",
-      "standard-jsx",
-      "standard-react"
-    ],
-    "plugins": [
-      "only-warn"
-    ]
-  },
-  "rescripts": [
-    "env"
-  ],
-  "standard": {
-    "parser": "babel-eslint",
-    "globals": [
-      "fetch"
-    ]
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
   },
   "browserslist": {
     "production": [
@@ -59,14 +37,18 @@
     "@rescripts/cli": "0.0.15",
     "@rescripts/rescript-env": "0.0.12",
     "babel-eslint": "10.1.0",
+    "eslint": "^7.20.0",
+    "eslint-config-airbnb": "^18.2.1",
     "eslint-config-standard": "16.0.2",
     "eslint-config-standard-jsx": "10.0.0",
     "eslint-config-standard-react": "11.0.1",
-    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-only-warn": "1.0.2",
     "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-react": "7.22.0",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "react-hot-loader": "4.13.0",
     "snazzy": "9.0.0",
     "standard": "16.0.3"

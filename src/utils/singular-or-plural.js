@@ -1,5 +1,5 @@
-function singularOrPlural (amount, singular, plural) {
-  return amount === 1 ? singular : plural
+function singularOrPlural(amount, singular, plural) {
+  return amount === 1 ? singular : plural;
 }
 
-export default singularOrPlural
+export default singularOrPlural;

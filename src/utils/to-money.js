@@ -1,8 +1,8 @@
-function toMoney (value) {
+function toMoney(value) {
   return Number(value).toLocaleString('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
-  })
+    currency: 'BRL',
+  });
 }
 
-export default toMoney
+export default toMoney;

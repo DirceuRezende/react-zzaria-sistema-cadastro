@@ -1,44 +1,47 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
-import { LinearProgress } from '@material-ui/core'
-import firebase from 'services/firebase'
-import { useAuth } from 'hooks'
+import React, {
+  lazy, Suspense, useEffect, useState,
+} from 'react';
+import {
+  Redirect, Route, Switch, useLocation,
+} from 'react-router-dom';
+import { LinearProgress } from '@material-ui/core';
+import firebase from 'services/firebase';
+import { useAuth } from 'hooks';
 
-import { HOME, LOGIN } from 'routes'
+import { HOME, LOGIN } from 'routes';
 
-const MainPage = lazy(() => import('pages/main'))
-const Login = lazy(() => import('pages/login'))
+const MainPage = lazy(() => import('pages/main'));
+const Login = lazy(() => import('pages/login'));
 
 const App = () => {
-  const location = useLocation()
-  const { userInfo, setUserInfo } = useAuth()
-  const [didCheckUserIn, setDidCheckUserIn] = useState(false)
+  const location = useLocation();
+  const { userInfo, setUserInfo } = useAuth();
+  const [didCheckUserIn, setDidCheckUserIn] = useState(false);
 
-  const { isUserLoggedIn } = userInfo
+  const { isUserLoggedIn } = userInfo;
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user)
       setUserInfo({
         isUserLoggedIn: !!user,
         user: user && {
           ...user,
           firstName: user.displayName.split(' ')[0]
-        }
-      })
-      setDidCheckUserIn(true)
-    })
-  }, [setUserInfo])
+        },
+      });
+      setDidCheckUserIn(true);
+    });
+  }, [setUserInfo]);
 
   if (!didCheckUserIn) {
-    return <LinearProgress />
+    return <LinearProgress />;
   }
 
   if (isUserLoggedIn && location.pathname === LOGIN) {
-    return <Redirect to={HOME} />
+    return <Redirect to={HOME} />;
   }
 
   if (!isUserLoggedIn && location.pathname !== LOGIN) {
-    return <Redirect to={LOGIN} />
+    return <Redirect to={LOGIN} />;
   }
 
   return (
@@ -50,7 +53,7 @@ const App = () => {
         </Switch>
       </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

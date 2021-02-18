@@ -1,1 +1,1 @@
-export { default } from './pizzas-flavours'
+export { default } from './pizzas-flavours';
