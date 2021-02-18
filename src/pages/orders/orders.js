@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import {
-  Paper,
+  Fab,
   Table,
   TableBody,
   TableCell,
-  TableContainer as MaterialTableContainer,
-  TableHead,
   TableRow,
   Typography,
 } from '@material-ui/core';
+import { Check, DonutLarge, Motorcycle }  from '@material-ui/icons';
+import { TableContainer, TableTitle, THead, Th } from 'ui'
 import styled from 'styled-components';
 
 import singularOrPlural from 'utils/singular-or-plural';
@@ -16,20 +16,29 @@ import singularOrPlural from 'utils/singular-or-plural';
 import { useOrders } from 'hooks';
 
 const Order = () => {
-  const { orders, status } = useOrders();
+  const { orders, status, updateOrder } = useOrders();
 
   const allOrdersStatus = useMemo(() => ([
     {
       title: 'Pedidos pendentes',
-      type: status.pending
+      type: status.pending,
+      nextAction: status.inProgress,
+      nextButtonTitle: 'Em produção',
+      icon: DonutLarge
     },
     {
       title: 'Pedidos em produção',
-      type: status.inProgress
+      type: status.inProgress,
+      nextAction: status.outForDelivery,
+      nextButtonTitle: 'Saiu para entrega',
+      icon: Motorcycle
     },
     {
       title: 'Saiu para entrega',
-      type: status.outForDelivery
+      type: status.outForDelivery,
+      nextAction: status.delivered,
+      nextButtonTitle: 'Entregue',
+      icon: Check
     },
     {
       title: 'Pedidos finalizados',
@@ -46,7 +55,7 @@ const Order = () => {
   }
 
   return allOrdersStatus.map((orderStatus) => (
-    <TableContainer component={Paper} key={orderStatus.title}>
+    <TableContainer key={orderStatus.title}>
       <TableTitle>
         {orderStatus.title}
       </TableTitle>
@@ -56,6 +65,12 @@ const Order = () => {
             <Th>
               <Typography>
                 Informações do pedido
+              </Typography>
+            </Th>
+
+            <Th align='center'>
+              <Typography>
+                Mudar Status
               </Typography>
             </Th>
           </TableRow>
@@ -153,6 +168,18 @@ const Order = () => {
                     </Typography>
                   </div>
                 </TableCell>
+
+                {orderStatus.nextAction && (
+                  <TableCell align='center'>
+                    <Fab
+                      color='primary'
+                      title={`Mudar status para "${orderStatus.nextButtonTitle}"`}
+                      onClick={() => updateOrder({ orderId:order.id, status: orderStatus.nextAction })}
+                    >
+                      <orderStatus.icon />
+                    </Fab>
+                   </TableCell>
+                )}
               </TableRow>
             );
           })}
@@ -162,39 +189,11 @@ const Order = () => {
   ));
 };
 
-const TableContainer = styled(MaterialTableContainer).attrs({
-  component: Paper,
-})`
-  && {
-    margin-bottom: ${({ theme }) => theme.spacing(3)}px;
-  }
-`;
-
-const TableTitle = styled(Typography).attrs({
-  variant: 'h6',
-})`
-  && {
-    padding: ${({ theme }) => theme.spacing(3)}px;
-  }
-`;
-
 const Subtitle = styled(Typography).attrs({
   variant: 'button',
 })`
   && {
     font-weight: bold;
-  }
-`;
-
-const THead = styled(TableHead)`
-  && {
-    background: ${({ theme }) => theme.palette.common.black};
-  }
-`;
-
-const Th = styled(TableCell)`
-  && {
-    color: ${({ theme }) => theme.palette.common.white};
   }
 `;
 

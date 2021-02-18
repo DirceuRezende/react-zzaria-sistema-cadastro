@@ -2,7 +2,7 @@ import React from 'react';
 import t from 'prop-types';
 import { Grid, TextField as MaterialTextField } from '@material-ui/core';
 
-function TextField({ autoFocus, xs, ...props }) {
+function TextField({ autoFocus, xs = 12, ...props }) {
   return (
     <Grid item xs={xs}>
       <MaterialTextField fullWidth variant="outlined" {...props} inputProps={{ autoFocus }} />
