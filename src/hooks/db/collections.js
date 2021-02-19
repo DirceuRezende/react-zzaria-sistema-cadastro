@@ -25,20 +25,23 @@ function useCollection(collection) {
   }, [collection, mounted]);
 
   const add = useCallback((data) => {
-    console.log(data);
     db.collection(collection).add(data);
-  }, [collection])
+  }, [collection]);
+
+  const edit = useCallback((id, data) => {
+    db.collection(collection).doc(id).set(data);
+  }, [collection]);
 
   const remove = useCallback(async (id) => {
     await db.collection(collection).doc(id).delete();
     fetchCollectionData();
-  }, [collection, fetchCollectionData])
+  }, [collection, fetchCollectionData]);
 
   useEffect(() => {
     fetchCollectionData()
   }, [pathname, fetchCollectionData]);
 
-  return { data, add, remove };
+  return { data, add, edit, remove };
 }
 
 export default useCollection;
