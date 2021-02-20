@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import {
   Link, Route, Switch, useLocation,
@@ -21,6 +21,13 @@ const PizzasFlavours = lazy(() => import('pages/pizzas-flavours'));
 const Main = () => {
   const { pathname } = useLocation();
 
+  useScrollToTop();
+
+  const getSelectedMenuItem = useCallback((item) => {
+    return pathname === item.link ||
+    (pathname.includes(item.link) && item.link !== routes.HOME);
+  }, [pathname]);
+
   return (
     <h1>
       <Drawer variant="permanent">
@@ -38,7 +45,7 @@ const Main = () => {
 
         <List>
           {menuItems.map((item) => (
-            <ListItem key={item.label} button component={Link} to={item.link} selected={pathname === item.link}>
+            <ListItem key={item.label} button component={Link} to={item.link} selected={getSelectedMenuItem(item)}>
               <ListItemText>
                 {item.label}
               </ListItemText>
@@ -61,6 +68,14 @@ const Main = () => {
 
     </h1>
   );
+};
+
+function useScrollToTop () {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 };
 
 const menuItems = [

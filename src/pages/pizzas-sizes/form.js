@@ -4,7 +4,7 @@ import {
   Button,
   Grid,
   Typography } from '@material-ui/core';
-import { TextField } from 'ui';
+import { Form, FormContainer, TextField } from 'ui';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { PIZZAS_SIZES } from 'routes'
 import { useCollection } from 'hooks';
@@ -23,7 +23,7 @@ const FormRegisterSize = () => {
 
   useEffect(() => {
     nameField.current.focus();
-  }, [id])
+  }, [id]);
 
   useEffect(() => {
     dispatch({
@@ -41,7 +41,7 @@ const FormRegisterSize = () => {
         [name]: value
       }
     })
-  }, [])
+  }, []);
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
@@ -58,10 +58,10 @@ const FormRegisterSize = () => {
     else await add(normalizedData)
 
     history.push(PIZZAS_SIZES);
-  }, [add, edit, history, pizzaEditable])
+  }, [add, edit, history, pizzaEditable]);
 
   return (
-    <Container>
+    <FormContainer>
       <Grid item xs={12}>
         <Typography variant='h4'>
           {texts.title}
@@ -111,26 +111,9 @@ const FormRegisterSize = () => {
           </Grid>
         </Grid>
       </Form>
-    </Container>
+    </FormContainer>
   )
 }
-
-const Form = styled(Grid).attrs({
-  item: true,
-  container: true,
-  xs: 12,
-  spacing: 2,
-  component: 'form'
-})``
-
-const Container = styled(Grid).attrs({
-  container: true,
-  spacing: 2
-})`
-  && {
-    margin-bottom: ${({ theme }) => theme.spacing(5)}px;
-  }
-`
 
 const initialState = {
   name: '',
@@ -151,7 +134,7 @@ function reducer (state, action) {
     }
   }
   return state;
-}
+};
 
 function usePizzaSize (id) {
   const { data, add, edit } = useCollection('pizzasSizes');
@@ -159,9 +142,9 @@ function usePizzaSize (id) {
 
   useEffect(() => {
     setPizza(data?.find(p => p.id === id) || initialState)
-  }, [data, id])
+  }, [data, id]);
 
-  return { pizza, add, edit }
-}
+  return { pizza, add, edit };
+};
 
 export default FormRegisterSize;

@@ -1,10 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { PIZZAS_SIZES, NEW, EDIT } from 'routes'
-
 import {
-  Button as MaterialButton,
   Grid,
   Table,
   TableBody,
@@ -12,9 +8,10 @@ import {
   TableCell
 } from '@material-ui/core';
 import { Add, Delete, Edit } from '@material-ui/icons'
-import { TableContainer, TableTitle, THead, Th } from 'ui';
+import { TableButton, TableContainer, TableTitle, TableTitleContainer, THead, Th } from 'ui';
 import { useCollection } from 'hooks';
 import { singularOrPlural } from 'utils';
+import { PIZZAS_SIZES, NEW, EDIT } from 'routes'
 
 const TablePizzasSizes = () => {
   const { data: pizzasSizes, remove } = useCollection('pizzasSizes');
@@ -22,7 +19,7 @@ const TablePizzasSizes = () => {
 
   return (
     <TableContainer>
-      <TitleContainer>
+      <TableTitleContainer>
         <Grid item>
           <TableTitle>
             Tamanhos de Pizzas
@@ -30,14 +27,11 @@ const TablePizzasSizes = () => {
         </Grid>
 
         <Grid item>
-          <Button color='primary' startIcon={<Add />} component={Link} to={`${PIZZAS_SIZES}${NEW}`} disabled={!!newSizePath}>
+          <TableButton color='primary' startIcon={<Add />} component={Link} to={`${PIZZAS_SIZES}${NEW}`} disabled={!!newSizePath}>
             Adicionar novo tamanho
-          </Button>
+          </TableButton>
         </Grid>
-      </TitleContainer>
-
-
-
+      </TableTitleContainer>
 
       <Table>
         <THead>
@@ -61,12 +55,12 @@ const TablePizzasSizes = () => {
               {singularOrPlural(pizza.flavours, 'sabor', 'sabores')}
             </TableCell>
             <TableCell align='right'>
-              <Button startIcon={<Edit />} component={Link} to={`${PIZZAS_SIZES}${EDIT(pizza.id)}`}>
+              <TableButton startIcon={<Edit />} component={Link} to={`${PIZZAS_SIZES}${EDIT(pizza.id)}`}>
                 Editar
-              </Button>
-              <Button color='secondary' startIcon={<Delete />} onClick={() => remove(pizza.id)}>
+              </TableButton>
+              <TableButton color='secondary' startIcon={<Delete />} onClick={() => remove(pizza.id)}>
                 Remover
-              </Button>
+              </TableButton>
             </TableCell>
           </TableRow>
         ))}
@@ -76,27 +70,5 @@ const TablePizzasSizes = () => {
     </TableContainer>
   )
 };
-
-const TitleContainer = styled(Grid).attrs({
-  container: true,
-  justify: 'space-between',
-  alignItems: 'center'
-})`
-  && {
-    padding: ${( {theme} ) => theme.spacing(3)}px;
-
-    ${TableTitle} {
-      padding: 0;
-    }
-  }
-`
-
-const Button = styled(MaterialButton).attrs({
-  variant: 'contained'
-})`
-  && {
-    margin-left: ${( {theme} ) => theme.spacing(2)}px;
-  }
-`
 
 export default TablePizzasSizes;
