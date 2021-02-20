@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-handler-names */
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Grid } from '@material-ui/core';
-import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg';
+import { Button, Grid, Typography } from '@material-ui/core';
 import { useAuth } from 'hooks';
 
 const Login = () => {
@@ -12,7 +11,9 @@ const Login = () => {
     <Container>
       <Grid container justify="center" spacing={5}>
         <Grid item>
-          <Logo />
+          <Title>React-zzaria</Title>
+          <Description>sistema de cadastros</Description>
+          <Description />
         </Grid>
         <Grid item xs={12} container justify="center">
           <GitHubButton onClick={login}>
@@ -24,9 +25,30 @@ const Login = () => {
   );
 };
 
-const Logo = styled(MainLogo)`
-  width: 100%;
-`;
+const Title = styled(Typography).attrs({
+  variant: 'h2'
+})`
+  && {
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+
+    &::after {
+      border-bottom: 1px solid #000;
+      bottom: -13px;
+      content: '';
+      left: 0;
+      position: absolute;
+      width: 150px
+    }
+  }
+`
+
+const Description = styled(Typography)`
+  && {
+    text-align: right;
+  }
+`
 
 const Container = styled.div`
   padding: ${({ theme }) => theme.spacing(3)}px;
