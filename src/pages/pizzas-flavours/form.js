@@ -26,7 +26,7 @@ const FormRegisterFlavour = () => {
   const [pizzaEditable, dispatch] = useReducer(reducer, initialState);
 
   const texts = useMemo(() => ({
-    title: id ? 'Editar tamanho' : 'Cadastrar novo tamanho',
+    title: id ? 'Editar sabor' : 'Cadastrar novo sabor',
     button: id ? 'Salvar' : 'Cadastrar'
   }), [id]);
 
